@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FinancialChat.RabbitMQ;
 
 namespace FinancialChat
 {
@@ -40,6 +41,7 @@ namespace FinancialChat
             services.AddSignalR();
             //RabbitMq
             services.Configure<RabbitMQInfo>(Configuration.GetSection("RabbitMQ"));
+            services.AddSingleton<RabbitMQService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

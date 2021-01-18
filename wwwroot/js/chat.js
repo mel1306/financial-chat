@@ -101,6 +101,10 @@
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
 
+        $('#rabbitMQ').click(function (e) {
+            return sendMessageRabbitMQ(getMessageText());
+        });
+
         $('.send_message').click(function (e) {
             return sendMessage(getMessageText());
         });
@@ -129,6 +133,24 @@
                         });
                         renderMessage(message);
                     });
+                },
+                error: function (req, status, error) {
+                    console.log(error);
+                }
+            });
+
+            //return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+        };
+
+        sendMessageRabbitMQ = function (text) {
+            var currentUser = $('#currentUserName').val();
+            $.ajax({
+                type: "POST",
+                url: "/Home/RabbitMQ",
+                dataType: "json",
+                data: { text: text },
+                success: function (result) {
+                    
                 },
                 error: function (req, status, error) {
                     console.log(error);
