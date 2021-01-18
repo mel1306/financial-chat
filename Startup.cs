@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FinancialChat.RabbitMQ;
+using MessageQueue;
 
 namespace FinancialChat
 {

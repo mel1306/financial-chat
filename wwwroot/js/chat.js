@@ -59,12 +59,8 @@
                 userId: $('#currentUserId').val(),
                 //date: Date.now()
             });
-            //message.draw();
-
-            //connection.invoke("SendMessage", message).catch(function (err) {
-            //    return console.error(err.toString());
-            //});
-
+            
+            /*
             $.ajax({
                 type: "POST",
                 url: "/Home/Create",
@@ -81,6 +77,7 @@
                     console.log(error);
                 }
             });
+            */
 
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };

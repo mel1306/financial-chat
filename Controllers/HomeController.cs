@@ -72,7 +72,7 @@ namespace FinancialChat.Controllers
             //var message = new Message { UserName = User.Identity.Name, UserID = sender.Id, Text = text };
             //_rabbbitMQService.PublishMessage(message);
 
-            await _chatHub.Clients.All.SendAsync("ReceiveMessage", new Message { Date = DateTime.Now, Text = "qazwsx", UserID = "Bot", UserName = "Bot"});
+            await _chatHub.Clients.All.SendAsync("ReceiveMessage", new Message { Date = DateTime.Now, Text = "qazwsx", UserID = "Bot", UserName = "Bot" });
 
 
             return Ok();
@@ -86,10 +86,8 @@ namespace FinancialChat.Controllers
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
-                throw;
+                _logger.LogError(exception, exception.Message);
             }
-
         }
 
         public IActionResult Privacy()

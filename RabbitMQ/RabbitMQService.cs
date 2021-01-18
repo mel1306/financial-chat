@@ -1,10 +1,10 @@
-﻿using FinancialChat.Models;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
 using System.Text;
 using RabbitMQ.Client.Events;
+using MessageQueue;
 
 namespace FinancialChat.RabbitMQ
 {
