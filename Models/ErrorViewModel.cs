@@ -1,5 +1,3 @@
-using System;
-
 namespace FinancialChat.Models
 {
     public class ErrorViewModel

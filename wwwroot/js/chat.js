@@ -32,22 +32,8 @@
                 date: msg.date
             });
             renderMessage(message);
+            resizeChatWindow();
         });
-
-        //connection.on("SaveMessage", function (msg) {
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "/Home/Create",
-        //        data: { text: msg.text },
-        //        dataType: "json",
-        //        success: function (result) {
-        //            console.log(result);
-        //        },
-        //        error: function (req, status, error) {
-        //            console.log(error);
-        //        }
-        //    });
-        //});
 
         connection.start().then(function () {
         }).catch(function (err) {
@@ -66,7 +52,6 @@
             }
             $('.message_input').val('');
             $messages = $('.messages');
-            //message_side = message_side === 'left' ? 'right' : 'left';
             message = new Message({
                 text: text,
                 message_side: 'left',
@@ -75,29 +60,13 @@
                 //date: Date.now()
             });
 
-            message.draw();
-
-            checkChatMessage(text);
-
-            
-            /*
-            $.ajax({
-                type: "POST",
-                url: "/Home/Create",
-                data: { text: text },
-                dataType: "json",
-                success: function (msg) {
-                    console.log(msg);
-                    connection.invoke("SendMessage", message).catch(function (err) {
-                        return console.error(err.toString());
-                    });
-                    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-                },
-                error: function (req, status, error) {
-                    console.log(error);
-                }
+            connection.invoke("SendMessage", message).catch(function (err) {
+                return console.error(err.toString());
             });
-            */
+
+            var jsonText = JSON.stringify(message);
+            checkChatMessage(jsonText);
+            //checkChatMessage(text);
 
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
@@ -105,29 +74,18 @@
             var $messages;
             $('.message_input').val('');
             $messages = $('.messages');
-            //message_side = message_side === 'left' ? 'right' : 'left';
-            //message_side = isCurrentUser ? 'left' : 'right';
-            //message = new Message({
-            //    text: text,
-            //    message_side: message_side
-            //});
-            //var currentUser = $('#currentUserName').val();
-            //if (!message.message_side)
-            //    message.message_side = currentUser === message.userName ? 'left' : 'right';
             message.draw();
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
 
-        $('#rabbitMQ').click(function (e) {
-            return sendMessageRabbitMQ(getMessageText());
-        });
-
         $('.send_message').click(function (e) {
+            resizeChatWindow();
             return sendMessage(getMessageText());
         });
 
         $('.message_input').keyup(function (e) {
             if (e.which === 13) {
+                resizeChatWindow();
                 return sendMessage(getMessageText());
             }
         });
@@ -155,26 +113,6 @@
                     console.log(error);
                 }
             });
-
-            //return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-        };
-
-        sendMessageRabbitMQ = function (text) {
-            var currentUser = $('#currentUserName').val();
-            $.ajax({
-                type: "POST",
-                url: "/Home/RabbitMQ",
-                dataType: "json",
-                data: { text: text },
-                success: function (result) {
-                    
-                },
-                error: function (req, status, error) {
-                    console.log(error);
-                }
-            });
-
-            //return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
         checkChatMessage = function (text) {
             $.ajax({
@@ -189,20 +127,14 @@
                     console.log(error);
                 }
             });
-
-            //return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
-
-        /*
-        sendMessage('Hello Philip! :)');
-        setTimeout(function () {
-            return sendMessage('Hi Sandy! How are you?');
-        }, 1000);
-        return setTimeout(function () {
-            return sendMessage('I\'m fine, thank you!');
-        }, 2000);
-        */
-
+        resizeChatWindow = function () {
+            var count = $('.messages li').length;
+            if (count > 50) {
+                var items = $('.messages li').slice(0, count - 49).toArray();
+                items.forEach(item => item.remove());
+            }
+        }
         getMessages();
     });
 }.call(this));

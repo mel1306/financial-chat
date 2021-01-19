@@ -8,8 +8,5 @@ namespace FinancialChat.Hubs
     {
         public async Task SendMessage(Message message) =>
             await Clients.All.SendAsync("ReceiveMessage", message);
-
-        //public async Task SaveMessage(Message message) =>
-        //    await Clients.All.SendAsync("SaveMessage", message);
     }
 }

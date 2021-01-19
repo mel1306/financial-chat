@@ -63,8 +63,6 @@ namespace FinancialChat
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.UseSignalR(route => route.MapHub<ChatHub>("/Home/Index"));
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
