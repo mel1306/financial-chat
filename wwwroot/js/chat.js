@@ -34,6 +34,21 @@
             renderMessage(message);
         });
 
+        //connection.on("SaveMessage", function (msg) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/Home/Create",
+        //        data: { text: msg.text },
+        //        dataType: "json",
+        //        success: function (result) {
+        //            console.log(result);
+        //        },
+        //        error: function (req, status, error) {
+        //            console.log(error);
+        //        }
+        //    });
+        //});
+
         connection.start().then(function () {
         }).catch(function (err) {
             return console.error(err.toString());
@@ -59,6 +74,11 @@
                 userId: $('#currentUserId').val(),
                 //date: Date.now()
             });
+
+            message.draw();
+
+            checkChatMessage(text);
+
             
             /*
             $.ajax({
@@ -148,6 +168,22 @@
                 data: { text: text },
                 success: function (result) {
                     
+                },
+                error: function (req, status, error) {
+                    console.log(error);
+                }
+            });
+
+            //return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+        };
+        checkChatMessage = function (text) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/Bot",
+                dataType: "json",
+                data: { text: text },
+                success: function (result) {
+                    console.log(result);
                 },
                 error: function (req, status, error) {
                     console.log(error);

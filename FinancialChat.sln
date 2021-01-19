@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialChat", "FinancialChat.csproj", "{604D6482-A8CA-49AE-8811-442760A09363}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot", "..\Bot\Bot.csproj", "{69DA0459-720F-426B-B5E2-4905AD172613}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bot", "..\Bot\Bot.csproj", "{69DA0459-720F-426B-B5E2-4905AD172613}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestFinancialChat", "..\UnitTestFinancialChat\UnitTestFinancialChat.csproj", "{0B304F6B-36E1-4D6A-B80E-2771E7E26BC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{69DA0459-720F-426B-B5E2-4905AD172613}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69DA0459-720F-426B-B5E2-4905AD172613}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69DA0459-720F-426B-B5E2-4905AD172613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B304F6B-36E1-4D6A-B80E-2771E7E26BC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B304F6B-36E1-4D6A-B80E-2771E7E26BC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B304F6B-36E1-4D6A-B80E-2771E7E26BC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B304F6B-36E1-4D6A-B80E-2771E7E26BC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

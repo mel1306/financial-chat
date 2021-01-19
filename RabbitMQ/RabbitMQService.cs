@@ -13,8 +13,21 @@ namespace FinancialChat.RabbitMQ
         private const string QueueName = "FinancialChatQueue";
         private readonly IModel _channel;
         private readonly EventingBasicConsumer _consumer;
-
-        public event EventHandler<RabbitMQServiceEventArgs> MessageConsumed;
+        private EventHandler<RabbitMQServiceEventArgs> _messageConsumed;
+        public event EventHandler<RabbitMQServiceEventArgs> MessageConsumed
+        {
+            add
+            {
+                if (_messageConsumed == null)
+                {
+                    _messageConsumed += value;
+                }
+            }
+            remove
+            {
+                _messageConsumed -= value;
+            }
+        }
 
         public RabbitMQService(IOptions<RabbitMQInfo> rabbitMq)
         {
@@ -47,21 +60,9 @@ namespace FinancialChat.RabbitMQ
             _channel.BasicConsume(QueueName, true, _consumer);
         }
 
-        //public void PublishMessage(Message message)
-        //{
-        //    var jsonPayload = JsonConvert.SerializeObject(message);
-        //    var body = Encoding.UTF8.GetBytes(jsonPayload);
-
-        //    _channel.BasicPublish(exchange: "",
-        //        routingKey: QueueName,
-        //        basicProperties: null,
-        //        body: body
-        //    );
-        //}
-
         protected virtual void OnMessageConsumed(RabbitMQServiceEventArgs e)
         {
-            var handler = MessageConsumed;
+            var handler = _messageConsumed;
             handler?.Invoke(this, e);
         }
 

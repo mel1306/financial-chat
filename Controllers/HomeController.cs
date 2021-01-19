@@ -13,6 +13,8 @@ using FinancialChat.RabbitMQ;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Bot;
+using System.Text.RegularExpressions;
 
 namespace FinancialChat.Controllers
 {
@@ -24,20 +26,24 @@ namespace FinancialChat.Controllers
         private readonly ApplicationDbContext _db;
         private readonly RabbitMQService _rabbbitMQService;
         private readonly IHubContext<ChatHub> _chatHub;
+        private readonly BotService _bot;
+        private User currentUser;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, ApplicationDbContext db, RabbitMQService rabbitMQService, IHubContext<ChatHub> chatHub)
+        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, ApplicationDbContext db, RabbitMQService rabbitMQService, IHubContext<ChatHub> chatHub, BotService bot)
         {
             _logger = logger;
             _userManager = userManager;
             _db = db;
             _rabbbitMQService = rabbitMQService;
             _chatHub = chatHub;
-            _rabbbitMQService.MessageConsumed += MessageConsumed;
+            _bot = bot;
+            _rabbbitMQService.MessageConsumed += ShowBotMessageToChat;
+            _bot.NotCommand += SaveMessageOnDataBase;
         }
 
         public async Task<IActionResult> Index()
         {
-            var currentUser = await _userManager.GetUserAsync(User);
+            currentUser = await _userManager.GetUserAsync(User);
             if (User.Identity.IsAuthenticated)
             {
                 ViewBag.UserName = currentUser.UserName;
@@ -51,7 +57,7 @@ namespace FinancialChat.Controllers
         {
             //if (!User.Identity.IsAuthenticated) return Error();
             var sender = await _userManager.GetUserAsync(User);
-            var message = new Message {UserName = User.Identity.Name, UserID = sender.Id, Text = text };
+            var message = new Message { UserName = User.Identity.Name, UserID = sender.Id, Text = text };
             await _db.Messages.AddAsync(message);
             await _db.SaveChangesAsync();
             return Ok();
@@ -78,16 +84,11 @@ namespace FinancialChat.Controllers
             return Ok();
         }
 
-        private async void MessageConsumed(object sender, RabbitMQServiceEventArgs e)
+        [HttpPost("/Home/Bot")]
+        public IActionResult CheckChatMessage(string text)
         {
-            try
-            {
-                await _chatHub.Clients.All.SendAsync("ReceiveMessage", new Message { Date = e.Date, Text = e.Text, UserID = "Bot", UserName = "Bot" });
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, exception.Message);
-            }
+            _bot.CheckStocksCommand(text);
+            return Ok();
         }
 
         public IActionResult Privacy()
@@ -99,6 +100,26 @@ namespace FinancialChat.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private async void ShowBotMessageToChat(object sender, RabbitMQServiceEventArgs e)
+        {
+            await _chatHub.Clients.All.SendAsync("ReceiveMessage", new Message { Date = e.Date, Text = e.Text, UserID = "Bot", UserName = "Bot" });
+        }
+
+        private void SaveMessageOnDataBase(object sender, NotCommandEventArgs e)
+        {
+            //try
+            //{
+                //var message = new Message { UserName = currentUser.UserName, UserID = currentUser.Id, Text = e.Text };
+
+            //    await _db.Messages.AddAsync(message);
+            //    await _db.SaveChangesAsync();
+            //}
+            //catch (Exception exception)
+            //{
+            //    _logger.LogError(exception, exception.Message);
+            //}
         }
     }
 }
